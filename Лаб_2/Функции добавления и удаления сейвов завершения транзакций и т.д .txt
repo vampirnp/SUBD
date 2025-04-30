@@ -1,0 +1,71 @@
+ДОБАВЛЕНИЕ:
+-- Добавление клиента
+INSERT INTO Clients (Name, Phone, IsIndividual, Bank, Account)
+VALUES (N'Петров Петр Петрович', '9876543210', 1, N'ВТБ', '40817810099910000002');
+
+-- Добавление заявки
+INSERT INTO Claims (ClientID, Address, District, DocumentName, IsUrgent, Cost)
+VALUES (1, N'ул. Пушкина, д. 5', N'Северный', N'Технический паспорт', 1, 7500.00);
+
+-- Добавление платежа
+INSERT INTO Payments (ClaimID, Amount)
+VALUES (1, 3000.00);
+
+-- Добавление сотрудника
+INSERT INTO Workers (Name, Position)
+VALUES (N'Сидоров Иван Иванович', N'Техник');
+
+
+Обновление данных:
+-- Обновление стоимости заявки
+UPDATE Claims
+SET Cost = 8000.00
+WHERE ClaimID = 1;
+
+-- Обновление статуса заявки (документ выдан)
+UPDATE Claims
+SET IsFinished = 1, DateStop = GETDATE()
+WHERE ClaimID = 1;
+
+Выборка:
+-- Выбор всех клиентов
+SELECT * FROM Clients;
+
+-- Выбор всех заявок
+SELECT * FROM Claims;
+
+-- Выбор всех платежей
+SELECT * FROM Payments;
+
+-- Выбор всех сотрудников
+SELECT * FROM Workers;
+
+Завершение транзакции с сохранением изменений
+COMMIT TRANSACTION;
+
+Перед удаление создаем савепоинт
+SAVE TRANSACTION BeforeDelete;
+
+УДАЛЕНИЕ:
+DELETE FROM Payments
+WHERE ClaimID = 1;
+
+DELETE FROM Claims
+WHERE ClaimID = 1;
+
+DELETE FROM Clients
+WHERE ClientID = 1;
+
+после удаление проверяем
+SELECT * FROM Payments;
+
+Возврат к сайву
+ROLLBACK TRANSACTION BeforeDelete;
+
+Проверяем таблицы
+SELECT * FROM Payments;
+SELECT * FROM Claims;
+SELECT * FROM Clients;
+
+Завершение транзакции с сохранением изменений
+COMMIT TRANSACTION;

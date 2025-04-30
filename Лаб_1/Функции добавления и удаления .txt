@@ -1,0 +1,19 @@
+ДОБАВЛЕНИЕ:
+INSERT INTO Clients (Name, Phone, IsIndividual, Bank, Account)
+VALUES (N'Иванов Иван Иванович', '1234567890', 1, N'Сбербанк', '40817810099910000001');
+
+INSERT INTO Claims (ClientID, Address, District, DocumentName, IsUrgent, Cost)
+VALUES (1, N'ул. Ленина, д. 10', N'Центральный', N'Технический паспорт', 0, 5000.00);
+
+INSERT INTO Payments (ClaimID, Amount)
+VALUES (1, 2000.00);
+
+УДАЛЕНИЕ:
+DELETE FROM Payments
+WHERE ClaimID = 1;
+
+DELETE FROM Claims
+WHERE ClaimID = 1;
+
+DELETE FROM Clients
+WHERE ClientID = 1;

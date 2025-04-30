@@ -1,0 +1,58 @@
+-- Таблица Clients (Клиенты)
+CREATE TABLE Clients (
+    ClientID INT PRIMARY KEY IDENTITY(1,1), -- Уникальный идентификатор клиента
+    Name NVARCHAR(60) NOT NULL,            -- ФИО заказчика
+    Phone NVARCHAR(10) NOT NULL,           -- Телефон для связи
+    IsIndividual BIT NOT NULL,             -- Физическое (1) или юридическое (0) лицо
+    Bank NVARCHAR(60),                     -- Банк заказчика
+    Account NVARCHAR(20)                   -- Номер счета в банке
+);
+
+-- Таблица Claims (Заявки)
+CREATE TABLE Claims (
+    ClaimID INT PRIMARY KEY IDENTITY(1,1), -- Уникальный идентификатор заявки
+    ClientID INT NOT NULL,                 -- Ссылка на клиента
+    Address NVARCHAR(60) NOT NULL,         -- Адрес объекта
+    District NVARCHAR(15) NOT NULL,        -- Район города
+    DateStart DATETIME DEFAULT GETDATE(),  -- Дата приема заявки
+    DocumentName NVARCHAR(60) NOT NULL,    -- Название документа
+    IsUrgent BIT NOT NULL,                 -- Срочное изготовление (да/нет)
+    DateStop DATETIME,                     -- Дата выдачи документа
+    Cost DECIMAL(15, 2) NOT NULL,          -- Стоимость изготовления
+    InspectorDate DATETIME,                -- Дата выхода техника
+    InspectorTime NVARCHAR(20),            -- Время выхода техника
+    ChiefName NVARCHAR(30),                -- ФИО начальника отдела
+    WorkerName NVARCHAR(30),               -- ФИО исполнителя
+    WorkerDate DATETIME,                   -- Дата передачи исполнителю
+    HelperName NVARCHAR(30),               -- ФИО техника
+    IsCash BIT,                            -- Оплата наличными (да/нет)
+    PaymentDate DATETIME,                  -- Дата оплаты
+    PaidAmount DECIMAL(15, 2),             -- Оплаченная сумма
+    IsFinished BIT DEFAULT 0,              -- Документ выдан (да/нет)
+    FOREIGN KEY (ClientID) REFERENCES Clients(ClientID)
+);
+
+-- Таблица Payments (Платежи)
+CREATE TABLE Payments (
+    PaymentID INT PRIMARY KEY IDENTITY(1,1), -- Уникальный идентификатор платежа
+    ClaimID INT NOT NULL,                    -- Ссылка на заявку
+    PaymentDate DATETIME DEFAULT GETDATE(),  -- Дата оплаты
+    Amount DECIMAL(15, 2) NOT NULL,          -- Сумма оплаты
+    FOREIGN KEY (ClaimID) REFERENCES Claims(ClaimID)
+);
+
+-- Таблица Workers (Сотрудники)
+CREATE TABLE Workers (
+    WorkerID INT PRIMARY KEY IDENTITY(1,1), -- Уникальный идентификатор сотрудника
+    Name NVARCHAR(30) NOT NULL,             -- ФИО сотрудника
+    Position NVARCHAR(30) NOT NULL          -- Должность (инспектор, начальник, исполнитель, техник)
+);
+
+-- Таблица Documents (Документы)
+CREATE TABLE Documents (
+    DocumentID INT PRIMARY KEY IDENTITY(1,1), -- Уникальный идентификатор документа
+    ClaimID INT NOT NULL,                     -- Ссылка на заявку
+    DocumentName NVARCHAR(60) NOT NULL,       -- Название документа
+    IssueDate DATETIME DEFAULT GETDATE(),     -- Дата выдачи документа
+    FOREIGN KEY (ClaimID) REFERENCES Claims(ClaimID)
+);
